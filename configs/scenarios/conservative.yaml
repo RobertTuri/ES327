@@ -1,0 +1,4 @@
+# Scenario: conservative. Override only the base.yaml keys that change, same schema (value/unit/source/status).
+# Placeholder spread around central; replace once the literature review sets defensible ranges.
+name: conservative
+overrides: {}

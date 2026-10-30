@@ -1,0 +1,40 @@
+# --- Sponsor data: NEVER commit -------------------------------------------
+# Anything JLR-supplied lives in data/raw and stays local (or on approved storage).
+data/raw/
+data/interim/
+data/processed/
+*.xlsx
+*.xls
+*.xlsm
+!data/synthetic/*.xlsx
+outputs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# MATLAB / Simulink
+*.asv
+*.autosave
+slprj/
+*.slxc
+*_grt_rtw/
+*.mexw64
+*.mexa64
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.env

@@ -1,0 +1,37 @@
+# Base assumptions register.
+# Every parameter carries: value, unit, source, status.
+#   status: placeholder  -> made up to make code run; MUST be replaced before any result is reported
+#           sponsor      -> from the JLR data pack / JLR staff (cite as personal communication / data pack)
+#           literature   -> from a reference you have read and checked (put the ref key in `source`)
+#           derived      -> computed by this project (point to the script/notebook)
+# `twhr.config.load_config(..., strict=True)` refuses to run if any placeholder remains.
+
+site:
+  name: {value: "Triangle (anonymised)", unit: "-", source: "-", status: sponsor}
+
+data_centre:
+  it_heat_kw:        {value: 700,  unit: kW,   source: "JLR data pack, Summary tab", status: sponsor}
+  chw_supply_c:      {value: 18,   unit: degC, source: "JLR data pack, Summary tab", status: sponsor}
+  chw_return_c:      {value: 32.5, unit: degC, source: "JLR data pack: 30-35 degC range, midpoint", status: sponsor}
+
+heating_system:
+  lthw_flow_c:       {value: 70,   unit: degC, source: "JLR data pack, Summary tab", status: sponsor}
+  lthw_return_c:     {value: 62.5, unit: degC, source: "JLR data pack: 60-65 degC range, midpoint", status: sponsor}
+  boiler_efficiency: {value: 0.85, unit: "-",  source: "TODO", status: placeholder}
+  internal_setpoint_c: {value: 21, unit: degC, source: "TODO", status: placeholder}
+
+heat_pump:
+  exergetic_efficiency: {value: 0.5, unit: "-", source: "TODO: lit review (heat-pump reuse branch)", status: placeholder}
+  approach_temp_k:      {value: 5,   unit: K,   source: "TODO", status: placeholder}
+
+carbon:
+  gas_kgco2e_per_kwh:   {value: 0.18, unit: kgCO2e/kWh, source: "TODO: current UK govt GHG conversion factors", status: placeholder}
+  grid_kgco2e_per_kwh:  {value: 0.20, unit: kgCO2e/kWh, source: "TODO: current UK govt GHG conversion factors", status: placeholder}
+  gas_primary_energy_factor:  {value: 1.1, unit: "-", source: "TODO", status: placeholder}
+  grid_primary_energy_factor: {value: 1.5, unit: "-", source: "TODO", status: placeholder}
+
+economics:
+  gas_price_gbp_per_kwh:  {value: 0.06, unit: GBP/kWh, source: "TODO: ask JLR or use DESNZ non-domestic prices", status: placeholder}
+  elec_price_gbp_per_kwh: {value: 0.20, unit: GBP/kWh, source: "TODO", status: placeholder}
+  discount_rate:          {value: 0.07, unit: "-",     source: "TODO: ask JLR finance for hurdle rate", status: placeholder}
+  lifetime_years:         {value: 20,   unit: years,   source: "TODO", status: placeholder}

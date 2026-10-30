@@ -1,0 +1,16 @@
+{
+  "n_rows": 8760,
+  "start": "2025-03-01 00:00:00",
+  "end": "2026-02-28 23:00:00",
+  "duplicate_timestamps": 0,
+  "missing_hours": 0,
+  "nan_counts": {
+    "gas_kwh": 0,
+    "t_out_c": 0
+  },
+  "negative_counts": {
+    "gas_kwh": 0
+  },
+  "non_hourly_steps": 0,
+  "flags": []
+}
