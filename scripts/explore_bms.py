@@ -1,4 +1,4 @@
-import sys
+# import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 spreadsheet = "../Triangle_Building_Data_Centre_October/Triangle Boiler Data_Robert.xlsx"
 
 df = pd.read_excel(spreadsheet)
-print(df.columns.tolist()); print(df.head(3))
+print(df.columns.tolist())
+print(df.head(3))
 
 # Template to plot results instead - for Outdoor temperature not Boiler
 """
