@@ -1,6 +1,6 @@
 # ES327: Data-Centre Waste-Heat Reuse
 
-Techno-economic model for reusing ~700 kW of waste heat from an HPC data centre to replace
+Techno-economic model for reusing waste heat from an HPC data centre to replace
 gas-fired heating in its host building. BEng Systems Engineering individual project,
 University of Warwick, industry-sponsored.
 
