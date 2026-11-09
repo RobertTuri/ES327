@@ -1,3 +1,29 @@
+"""
+DATA SOURCE DETAILS (not included: sponsor-confidential)
+------------------------------------------------
+Data Structure of Excel Spreadsheet:
+Sheet:   first sheet (default), header on row 1, one row per timestamp
+Period:  <first timestamp> to <last timestamp> (calendar year 2025)
+Step:    <e.g. hourly>; <n> rows; <any gaps or missing values>
+
+Columns (read by position; the header encoding is unreliable):
+  0  Timestamp                       text, "DD-Mon-YY H:MM:SS AM/PM TZ",
+                                     TZ = BST or GMT (UK local time with
+                                     clock changes) -> converted to UTC here
+  1  Sec_CT_CKT_1_Flow_Temp(°C)      circuit 1 supply water temp, °C
+  2  Sec_CT_CKT_1_Return_Temp(°C)    circuit 1 return water temp, °C
+  3  Sec_CT_CKT_2_Flow_Temp(°C)      circuit 2 supply water temp, °C
+  4  Sec_CT_CKT_2_Return_Temp(°C)    circuit 2 return water temp, °C
+  5  Outside Temperature - (°C)      outdoor air temp, °C
+
+Notes:
+  - "Sec" = secondary circuits after the common header; "CT" assumed to mean
+    constant temperature (to confirm with sponsor).
+  - Flow rates are not logged in this file (spot readings ~8-11 l/s).
+  - To reproduce without the data, build a table with this exact layout
+    (e.g. synthetic values) and run the script on it.
+"""
+
 import sys
 import pandas as pd
 import matplotlib.pyplot as plt
