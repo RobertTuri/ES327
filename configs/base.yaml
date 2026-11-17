@@ -4,19 +4,19 @@
 #           sponsor      -> from the JLR data pack / JLR staff (cite as personal communication / data pack)
 #           literature   -> from a reference you have read and checked (put the ref key in `source`)
 #           derived      -> computed by this project (point to the script/notebook)
-# `twhr.config.load_config(..., strict=True)` refuses to run if any placeholder remains.
+# `waste_heat_model.config.load_config(..., strict=True)` refuses to run if any placeholder remains.
 
 site:
   name: {value: "Triangle (anonymised)", unit: "-", source: "-", status: sponsor}
 
 data_centre:
-  it_heat_kw:        {value: 700,  unit: kW,   source: "JLR data pack, Summary tab", status: sponsor}
-  chw_supply_c:      {value: 18,   unit: degC, source: "JLR data pack, Summary tab", status: sponsor}
-  chw_return_c:      {value: 32.5, unit: degC, source: "JLR data pack: 30-35 degC range, midpoint", status: sponsor}
+  it_heat_kw:        {value: 700,  unit: kW,   source: "JLR data pack, Summary tab", status: mock}
+  chw_supply_c:      {value: 18,   unit: degC, source: "JLR data pack, Summary tab", status: mock}
+  chw_return_c:      {value: 32.5, unit: degC, source: "JLR data pack: 30-35 degC range, midpoint", status: mock}
 
 heating_system:
-  lthw_flow_c:       {value: 70,   unit: degC, source: "JLR data pack, Summary tab", status: sponsor}
-  lthw_return_c:     {value: 62.5, unit: degC, source: "JLR data pack: 60-65 degC range, midpoint", status: sponsor}
+  lthw_flow_c:       {value: 70,   unit: degC, source: "JLR data pack, Summary tab", status: placeholder}
+  lthw_return_c:     {value: 62.5, unit: degC, source: "JLR data pack: 60-65 degC range, midpoint", status: placeholder}
   boiler_efficiency: {value: 0.85, unit: "-",  source: "TODO", status: placeholder}
   internal_setpoint_c: {value: 21, unit: degC, source: "TODO", status: placeholder}
 

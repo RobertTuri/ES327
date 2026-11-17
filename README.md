@@ -22,12 +22,12 @@ flowchart LR
 
 | Layer | Location | Role |
 |---|---|---|
-| Data | `src/twhr/data/` | Load the data pack, run quality checks (gaps, duplicates, out-of-range values), generate synthetic stand-in data |
+| Data | `src/waste_heat_model/data/` | Load the data pack, run quality checks (gaps, duplicates, out-of-range values), generate synthetic stand-in data |
 | Assumptions | `configs/` | Every parameter with value, unit, source and status. Scenario files override the base values. Strict mode blocks unsourced placeholders |
-| Libraries | `src/twhr/physics/`, `economics/` | Building-block equations (heat loss, COP, NPV, payback), each tested against a hand calculation |
+| Libraries | `src/waste_heat_model/physics/`, `economics/` (in legacy) | Building-block equations (heat loss, COP, NPV, payback), each tested against a hand calculation |
 | Subsystems | `baseline/`, `recovery/`, `ml/` | Calibrated host-building heat demand, waste-heat recovery options, ML component |
-| Interfaces | `src/twhr/interfaces.py` | Fixed inputs and outputs between subsystems, so each can be built and verified separately |
-| Orchestration | `src/twhr/scenarios/` | Runs each option across conservative, central and optimistic scenarios (Monte Carlo as an extension) |
+| Interfaces | `src/waste_heat_model/interfaces.py` | Fixed inputs and outputs between subsystems, so each can be built and verified separately |
+| Orchestration | `src/waste_heat_model/scenarios/` | Runs each option across conservative, central and optimistic scenarios (Monte Carlo as an extension) |
 | MATLAB | `matlab/` | Simulink/MATLAB models reading the same processed data |
 
 **Design principles**
@@ -45,7 +45,7 @@ docs/         requirements, decision records, data register, AI-use log
 matlab/       MATLAB functions and Simulink models
 notebooks/    exploration only
 scripts/      entry points (e.g. ingest.py)
-src/twhr/     Python package
+src/waste_heat_model/     Python package
 tests/        pytest suite
 ```
 

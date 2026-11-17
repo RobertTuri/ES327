@@ -1,8 +1,8 @@
 import pandas as pd
 
-from twhr.data.io import load_gas_figures
-from twhr.data.synthetic import make_synthetic_gas, write_synthetic_xlsx
-from twhr.data.validate import validate_hourly
+from waste_heat_model.data.io import load_gas_figures
+from waste_heat_model.data.synthetic import make_synthetic_gas, write_synthetic_xlsx
+from waste_heat_model.data.validate import validate_hourly
 
 
 def test_loader_matches_data_pack_layout(tmp_path):

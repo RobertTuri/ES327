@@ -1,6 +1,6 @@
 import pytest
 
-from twhr.config import PlaceholderError, load_config, values
+from waste_heat_model.config import PlaceholderError, load_config, values
 
 
 def test_loads_all_scenarios():

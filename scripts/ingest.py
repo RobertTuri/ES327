@@ -12,10 +12,10 @@ import argparse
 import json
 from pathlib import Path
 
-from twhr.config import REPO_ROOT
-from twhr.data.io import load_gas_figures, save_interim
-from twhr.data.synthetic import make_synthetic_gas
-from twhr.data.validate import validate_hourly
+from waste_heat_model.config import REPO_ROOT
+from waste_heat_model.data.io import load_gas_figures, save_interim
+from waste_heat_model.data.synthetic import make_synthetic_gas
+from waste_heat_model.data.validate import validate_hourly
 
 
 def main() -> int:

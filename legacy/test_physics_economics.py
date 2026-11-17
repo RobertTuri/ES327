@@ -3,9 +3,9 @@ import math
 import numpy as np
 import pytest
 
-from twhr.baseline.model import cv_rmse, nmbe
-from twhr.economics.metrics import breakeven_capex, discounted_payback, npv, simple_payback
-from twhr.physics.thermo import (
+from waste_heat_model.baseline.model import cv_rmse, nmbe
+from legacy.economics.metrics import breakeven_capex, discounted_payback, npv, simple_payback
+from waste_heat_model.physics.thermo import (
     cop_carnot_heating,
     cop_heating,
     fabric_vent_loss_kw,

@@ -14,7 +14,7 @@ from enum import Enum
 
 import numpy as np
 
-from twhr.physics.thermo import CP_WATER_KJ_PER_KG_K, water_heat_flow_kw
+from waste_heat_model.physics.thermo import CP_WATER_KJ_PER_KG_K, water_heat_flow_kw
 
 # If flow and return are closer than this, the log-mean formula turns into 0/0,
 # so we fall back to its limit instead.
