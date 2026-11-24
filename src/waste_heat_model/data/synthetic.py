@@ -18,12 +18,12 @@ def make_synthetic_gas(start: str = "2025-03-01", periods: int = 8760, seed: int
     """Hourly gas kWh from a toy degree-hour model plus noise, with UK-ish temperatures."""
     rng = np.random.default_rng(seed)
     idx = pd.date_range(start, periods=periods, freq="h")
-    doy = idx.dayofyear.to_numpy()
+    doy = idx.day_of_year.to_numpy()
     hod = idx.hour.to_numpy()
     t_out = (10.5 - 6.5 * np.cos(2 * np.pi * (doy - 20) / 365)
              + 3.0 * np.sin(2 * np.pi * (hod - 9) / 24)
              + rng.normal(0, 1.5, periods))
-    occupied = (idx.dayofweek < 5) & (hod >= 6) & (hod < 19)
+    occupied = (idx.day_of_week < 5) & (hod >= 6) & (hod < 19)
     heat_kw = ua_kw_per_k * np.clip(t_base_c - t_out, 0, None) * np.where(occupied, 1.0, 0.4)
     gas = (heat_kw + base_load_kw) / boiler_eff
     gas *= 1 + rng.normal(0, noise_frac, periods)
