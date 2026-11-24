@@ -4,15 +4,58 @@
 #           sponsor      -> from the JLR data pack / JLR staff (cite as personal communication / data pack)
 #           literature   -> from a reference you have read and checked (put the ref key in `source`)
 #           derived      -> computed by this project (point to the script/notebook)
+#           mock         -> from the MOCK data pack, not real JLR data. Runs in strict mode, but
+#                           config.provenance_note() flags it so every output says so
 # `waste_heat_model.config.load_config(..., strict=True)` refuses to run if any placeholder remains.
 
 site:
-  name: {value: "Triangle (anonymised)", unit: "-", source: "-", status: sponsor}
+  name: {value: "T (anonymised)", unit: "-", source: "-", status: sponsor}
 
+# Fluid properties. physics/thermo.py and physics/emitters.py hold the same numbers as constants;
+# tests/test_physics.py fails if the code and this register ever disagree.
+properties:
+  cp_water_kj_per_kg_k: {value: 4.18,  unit: kJ/(kg K), source: "TODO: textbook value, check against chosen property source (register D4)", status: placeholder}
+  cp_air_kj_per_kg_k:   {value: 1.005, unit: kJ/(kg K), source: "TODO: textbook value, check against chosen property source", status: placeholder}
+
+# To be confirmed***
 data_centre:
   it_heat_kw:        {value: 700,  unit: kW,   source: "JLR data pack, Summary tab", status: mock}
   chw_supply_c:      {value: 18,   unit: degC, source: "JLR data pack, Summary tab", status: mock}
   chw_return_c:      {value: 32.5, unit: degC, source: "JLR data pack: 30-35 degC range, midpoint", status: mock}
+
+# One block per emitter type; each key must match an EmitterType value in physics/emitters.py.
+emitters:
+  radiator:
+    q_nom_kw:       {value: 200,  unit: kW,   source: "TODO: installed radiator output, from JLR emitter schedule", status: placeholder}
+    n_exp:          {value: 1.3,  unit: "-",  source: "TODO: to verify, BS EN 442-2 / datasheets", status: placeholder}
+    t_flow_nom_c:   {value: 75,   unit: degC, source: "TODO: to verify, BS EN 442-2 rating", status: placeholder}
+    t_return_nom_c: {value: 65,   unit: degC, source: "TODO: as above", status: placeholder}
+    t_room_nom_c:   {value: 20,   unit: degC, source: "TODO: as above", status: placeholder}
+  fan_coil:
+    q_nom_kw:         {value: 100,  unit: kW,   source: "TODO: installed fan-coil output, from JLR emitter schedule", status: placeholder}
+    n_exp:            {value: 1.0,  unit: "-",  source: "TODO: to verify, BS EN 1397 / manufacturer heating curves", status: placeholder}
+    t_flow_nom_c:     {value: 70,   unit: degC, source: "TODO: manufacturer rating point", status: placeholder}
+    t_return_nom_c:   {value: 60,   unit: degC, source: "TODO: as above", status: placeholder}
+    t_room_nom_c:     {value: 20,   unit: degC, source: "TODO: as above", status: placeholder}
+    fan_speed_factor: {value: 1.0,  unit: "-",  source: "TODO: output at operating vs rated fan speed", status: placeholder}
+  underfloor:
+    q_nom_kw:       {value: 50,   unit: kW,   source: "TODO: confirm underfloor exists; output from M&E drawings", status: placeholder}
+    n_exp:          {value: 1.1,  unit: "-",  source: "TODO: to verify, BS EN 1264-2", status: placeholder}
+    t_flow_nom_c:   {value: 45,   unit: degC, source: "TODO: design flow from M&E drawings", status: placeholder}
+    t_return_nom_c: {value: 35,   unit: degC, source: "TODO: as above", status: placeholder}
+    t_room_nom_c:   {value: 20,   unit: degC, source: "TODO: as above", status: placeholder}
+
+  # AHU heating coil: v1 constant-effectiveness model, Q = eps * m_air * cp_air * (T_flow - T_air_on).
+  # Here t_room_nom_c means the design AIR-ON temperature. n_exp and t_return_nom_c are not used by
+  # this model (the return comes from the water-side balance); they are kept so the rating point is
+  # complete. eps is NOT an input: load_emitters works it out from this rating point (see design note).
+  ahu_coil:
+    q_nom_kw:       {value: 150,  unit: kW,   source: "TODO: AHU coil schedule (heating duty)", status: placeholder}
+    n_exp:          {value: 1.0,  unit: "-",  source: "not used by the AHU model", status: placeholder}
+    t_flow_nom_c:   {value: 70,   unit: degC, source: "TODO: AHU coil schedule (LTHW flow)", status: placeholder}
+    t_return_nom_c: {value: 50,   unit: degC, source: "TODO: AHU coil schedule (LTHW return)", status: placeholder}
+    t_room_nom_c:   {value: 10,   unit: degC, source: "TODO: AHU coil schedule (design AIR-ON temp)", status: placeholder}
+    m_dot_air_kg_s: {value: 5.0,  unit: kg/s, source: "TODO: AHU coil schedule (design airflow)", status: placeholder}
 
 heating_system:
   lthw_flow_c:       {value: 70,   unit: degC, source: "JLR data pack, Summary tab", status: placeholder}
@@ -24,6 +67,7 @@ heat_pump:
   exergetic_efficiency: {value: 0.5, unit: "-", source: "TODO: lit review (heat-pump reuse branch)", status: placeholder}
   approach_temp_k:      {value: 5,   unit: K,   source: "TODO", status: placeholder}
 
+# For later analysis...
 carbon:
   gas_kgco2e_per_kwh:   {value: 0.18, unit: kgCO2e/kWh, source: "TODO: current UK govt GHG conversion factors", status: placeholder}
   grid_kgco2e_per_kwh:  {value: 0.20, unit: kgCO2e/kWh, source: "TODO: current UK govt GHG conversion factors", status: placeholder}
