@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import numpy as np
 
+# Mirrors properties.cp_water_kj_per_kg_k in configs/base.yaml (a test keeps the two equal).
 CP_WATER_KJ_PER_KG_K = 4.18  # verify against your chosen property source
 
 

@@ -14,6 +14,7 @@ from enum import Enum
 
 import numpy as np
 
+from waste_heat_model.config import values
 from waste_heat_model.physics.thermo import CP_WATER_KJ_PER_KG_K, water_heat_flow_kw
 
 # If flow and return are closer than this, the log-mean formula turns into 0/0,
@@ -21,6 +22,7 @@ from waste_heat_model.physics.thermo import CP_WATER_KJ_PER_KG_K, water_heat_flo
 _EQUAL_TOL_K = 1e-9
 
 # Specific heat of air. Textbook value, still to check against my property source.
+# Mirrors properties.cp_air_kj_per_kg_k in configs/base.yaml (a test keeps the two equal).
 CP_AIR_KJ_PER_KG_K = 1.005
 
 
@@ -156,6 +158,55 @@ def balance_residual_kw(
     q_emitter_kw = emitter_output_kw(emitter, t_flow_c, t_return_c, t_room_c)
     q_water_kw = water_heat_flow_kw(m_dot_kg_s, t_flow_c, t_return_c, cp)
     return q_emitter_kw - q_water_kw
+
+#
+#  Loading from config
+#
+
+# Fields only some types use. If the YAML leaves them out, the Emitter defaults apply.
+_OPTIONAL_FIELDS = ("fan_speed_factor", "effectiveness", "m_dot_air_kg_s")
+
+
+def load_emitters(flat_cfg: dict[str, dict]) -> dict[EmitterType, Emitter]:
+    """Build one Emitter per type listed under `emitters:` in configs/base.yaml.
+
+    Takes the output of load_config(...), so scenario overrides apply. Only the types that
+    are in the config get built. Each YAML key has to match an EmitterType value, so a typo
+    fails here instead of halfway through a run.
+
+    AHU coils: if the YAML gives no effectiveness, it is worked out from the coil's own rating
+    point, so it isn't a separate guess and can't contradict q_nom_kw:
+        eps = Q_nom / (m_air * cp_air * (T_flow,nom - T_air_on,nom))
+    """
+    v = values(flat_cfg)
+    prefix = "emitters."
+    # Type names in the order they appear in the YAML, e.g. "emitters.radiator.n_exp" -> "radiator"
+    names = dict.fromkeys(k.split(".")[1] for k in v if k.startswith(prefix))
+
+    emitters: dict[EmitterType, Emitter] = {}
+    for name in names:
+        type_prefix = f"{prefix}{name}."
+        p = {k.removeprefix(type_prefix): val for k, val in v.items() if k.startswith(type_prefix)}
+        try:
+            kind = EmitterType(name)
+        except ValueError:
+            raise ValueError(f"Unknown emitter type in config: {name!r}") from None
+        nominal = NominalConditions(p["t_flow_nom_c"], p["t_return_nom_c"], p["t_room_nom_c"])
+        if kind is EmitterType.AHU_COIL and "effectiveness" not in p:
+            # For AHUs, t_room_nom_c is the design air-on temperature.
+            max_heat_kw = p["m_dot_air_kg_s"] * CP_AIR_KJ_PER_KG_K * (
+                nominal.t_flow_nom_c - nominal.t_room_nom_c
+            )
+            p["effectiveness"] = p["q_nom_kw"] / max_heat_kw
+        emitters[kind] = Emitter(
+            name=name,
+            kind=kind,
+            q_nom_kw=p["q_nom_kw"],
+            n_exp=p["n_exp"],
+            nominal=nominal,
+            **{f: p[f] for f in _OPTIONAL_FIELDS if f in p},
+        )
+    return emitters
 
 
 # --- Still to do (see design note) --------------------------------------------------------

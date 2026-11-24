@@ -18,6 +18,10 @@ CONFIG_DIR = REPO_ROOT / "configs"
 LEAF_KEYS = {"value", "unit", "source", "status"}
 
 
+# Statuses that are allowed to run but must be flagged on every output.
+UNVERIFIED_STATUSES = ("mock", "placeholder")
+
+
 class PlaceholderError(RuntimeError):
     """Raised in strict mode when a placeholder assumption would reach a reported result."""
 
@@ -65,3 +69,26 @@ def load_config(scenario: str | None = None, strict: bool = False,
 def values(flat: dict[str, dict]) -> dict[str, Any]:
     """Strip provenance: {dotted_key: value}."""
     return {k: p["value"] for k, p in flat.items()}
+
+
+def unverified(flat: dict[str, dict]) -> dict[str, list[str]]:
+    """Which loaded parameters are mock or placeholder: {status: [dotted keys]}.
+
+    This flags everything that was LOADED, not only what a given result used, so it can
+    over-warn but never under-warn.
+    """
+    return {
+        status: [k for k, p in flat.items() if p.get("status") == status]
+        for status in UNVERIFIED_STATUSES
+        if any(p.get("status") == status for p in flat.values())
+    }
+
+
+def provenance_note(flat: dict[str, dict]) -> str:
+    """One line to put on every output (plot title, CSV header, KPI table)."""
+    flags = unverified(flat)
+    if not flags:
+        return "All inputs verified."
+    counts = ", ".join(f"{len(keys)} {status}" for status, keys in flags.items())
+    return f"UNVERIFIED INPUTS ({counts}): not for reporting."
+
