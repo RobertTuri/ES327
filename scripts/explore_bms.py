@@ -80,6 +80,20 @@ df["q_kw"] = df["q1_kw"] + df["q2_kw"]
 
 # New data (as of november)
 daily = df.resample("D").mean(numeric_only=True)
+
+# AI generated 'SQL-type' queries:
+step_h = df.index.to_series().diff().median() / pd.Timedelta(hours=1)
+print(f"\nPeriod: {df.index.min():%d %b %Y} to {df.index.max():%d %b %Y} | {len(df)} rows | step {step_h:g} h")
+print(f"Missing values: {int(df.isna().sum().sum())}")
+print(f"Outdoor: mean {df[t_out].mean():.1f} °C (min {df[t_out].min():.1f}, max {df[t_out].max():.1f})")
+for i, (s, r, f) in enumerate([(sup1, ret1, flow1), (sup2, ret2, flow2)], 1):
+    dt = df[s] - df[r]
+    print(f"Circuit {i}: supply {df[s].mean():.1f} °C | ΔT {dt.mean():.1f} K | flow {df[f].mean():.2f} l/s | "
+          f"heat mean {df[f'q{i}_kw'].mean():.0f} kW | bad hours (ΔT<=0 or flow<=0): {int(((dt <= 0) | (df[f] <= 0)).sum())}")
+print(f"Total heat: mean {df['q_kw'].mean():.0f} kW | peak day {daily['q_kw'].max():.0f} kW | "
+      f"energy {df['q_kw'].sum() * step_h / 1000:.0f} MWh over the period")
+print(f"Days above 700 kW (mock DC heat): {int((daily['q_kw'] > 700).sum())} of {len(daily)}")
+
 fig2, ax2 = plt.subplots(3, 1, figsize=(9, 11))
 daily[[flow1, flow2]].plot(ax=ax2[0], lw=1, title="Flow rate per circuit (daily mean)")
 daily[["q1_kw", "q2_kw", "q_kw"]].plot(ax=ax2[1], lw=1, title="Measured heat, kW (daily mean)")
