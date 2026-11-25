@@ -62,8 +62,8 @@ fig, ax = plt.subplots(3, 1, figsize=(8, 10))
 ax[0].scatter(df[t_out], df[sup1], s=2)
 ax[0].set(xlabel="Outdoor °C", ylabel="Supply °C")
 ax[1].hist(df[sup1] - df[ret1], bins=50)
-ax[1].set(xlabel="Supply − return (K)")
-#plt.tight_layout()
+ax[1].set(xlabel="Supply − return (K)", ylabel="Hours")
+plt.tight_layout()
 #plt.show()
 
 #fig, ax = plt.subplots(figsize=(12, 4))
@@ -78,6 +78,7 @@ df["q1_kw"] = water_heat_flow_kw(df[flow1] * TO_KG_S, df[sup1], df[ret1])
 df["q2_kw"] = water_heat_flow_kw(df[flow2] * TO_KG_S, df[sup2], df[ret2])
 df["q_kw"] = df["q1_kw"] + df["q2_kw"]
 
+# New data (as of november)
 daily = df.resample("D").mean(numeric_only=True)
 fig2, ax2 = plt.subplots(3, 1, figsize=(9, 11))
 daily[[flow1, flow2]].plot(ax=ax2[0], lw=1, title="Flow rate per circuit (daily mean)")
